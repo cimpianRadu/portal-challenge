@@ -1,12 +1,5 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import Navigation from 'navigation';
 import React from 'react';
+import Navigation from 'navigation';
 
 function App(): React.JSX.Element {
   return <Navigation />;
