@@ -1,17 +1,18 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-import * as walletSDK from '@multiversx/sdk-wallet';
-import {inspectAccount} from '../../api';
-
 import Clipboard from '@react-native-clipboard/clipboard';
-import {UserAddress} from '@multiversx/sdk-wallet/out/userAddress';
 import {Button, PrimaryButton} from 'components';
 import {texts} from '../../constants';
 import styles from './styles';
+import {useAppDispatch} from 'redux/hooks';
+import {useSelector} from 'react-redux';
+import {getMnemonicSelector, setMnemonic} from 'redux/slices/mnemonicSlice';
+import {getInitWalletStatus, initWallet} from 'redux/slices/walletSlice';
 
-const ImportWallet = () => {
-  const [mnemonic, setMnemonic] = React.useState('');
-  const [wallet, setWallet] = React.useState<UserAddress | null>(null);
+const ImportWallet = ({navigation}) => {
+  const dispatch = useAppDispatch();
+  const mnemonic = useSelector(getMnemonicSelector);
+  const importWalletStatus = useSelector(getInitWalletStatus);
 
   React.useEffect(() => {
     Clipboard.setString(
@@ -20,24 +21,19 @@ const ImportWallet = () => {
   }, []);
 
   React.useEffect(() => {
-    if (!wallet) return;
-    inspectAccount(wallet);
-  }, [wallet]);
+    if (importWalletStatus === 'SUCCESS') {
+      navigation.navigate('Wallet');
+    }
+  }, [importWalletStatus]);
 
   const onPasteMnemonic = async () => {
     const mnemonic = await Clipboard.getString();
-    setMnemonic(mnemonic);
+    dispatch(setMnemonic(mnemonic));
   };
 
   const onImport = async () => {
-    const w = walletSDK.UserWallet.fromMnemonic({
-      mnemonic: mnemonic,
-      password: 'oParola#1',
-    });
-
-    const d = walletSDK.UserWallet.decrypt(w.toJSON(), 'oParola#1');
-    const y = d.generatePublicKey().toAddress();
-    setWallet(y);
+    if (!mnemonic) return;
+    dispatch(initWallet({mnemonic}));
   };
 
   return (

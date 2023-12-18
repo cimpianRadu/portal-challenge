@@ -8,7 +8,7 @@ const proxyNetworkProvider = new ProxyNetworkProvider(
   'https://devnet-gateway.multiversx.com',
 );
 
-const apiNetworkProvider = new ApiNetworkProvider(
+export const apiNetworkProvider = new ApiNetworkProvider(
   'https://devnet-api.multiversx.com',
 );
 

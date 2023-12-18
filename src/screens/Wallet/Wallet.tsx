@@ -1,25 +1,24 @@
 import React from 'react';
 import {Text, View} from 'react-native';
-import * as walletSDK from '@multiversx/sdk-wallet';
-import {inspectAccount} from '../../api';
-
-import {UserAddress} from '@multiversx/sdk-wallet/out/userAddress';
+import {useSelector} from 'react-redux';
+import {getWallet} from 'redux/slices/walletSlice';
 
 const Wallet = () => {
-  const [wallet, setWallet] = React.useState<UserAddress | null>(null);
+  const wallet = useSelector(getWallet);
 
-  React.useEffect(() => {
-    if (!wallet) return;
-    inspectAccount(wallet);
-  }, [wallet]);
-
+  console.log('the wallet ', wallet);
   return (
     <View style={{flex: 1, alignItems: 'center'}}>
       <Text>Welcome</Text>
 
       <Text>Wallet address:</Text>
 
-      {wallet !== null && <Text>{wallet.bech32()}</Text>}
+      {wallet !== null && (
+        <>
+          <Text>{wallet.address.bech32()}</Text>
+          <Text>{String(wallet.balance)}</Text>
+        </>
+      )}
     </View>
   );
 };
