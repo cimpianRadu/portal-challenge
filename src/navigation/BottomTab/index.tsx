@@ -1,6 +1,6 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import WalletStackNavigator from 'navigation/Stacks/WalletStack';
+import WalletStackNavigator from '../Stacks/WalletStack';
 
 const Tab = createBottomTabNavigator();
 
