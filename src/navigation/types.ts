@@ -11,6 +11,7 @@ export type RootStackParamList = {
   Webview: {
     uri: string;
   };
+  DApp: undefined;
 };
 
 export type ImportWalletNavigationProp = StackNavigationProp<
@@ -39,3 +40,8 @@ export type ConfirmationScreenRouteProp = RouteProp<
 >;
 
 export type WebviewScreenRouteProp = RouteProp<RootStackParamList, 'Webview'>;
+
+export type DAppNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'DApp'
+>;
