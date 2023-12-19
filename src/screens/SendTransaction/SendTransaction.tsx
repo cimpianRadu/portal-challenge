@@ -6,98 +6,65 @@ import {
   TransactionPayload,
 } from '@multiversx/sdk-core/out';
 import {useLazyGetAccountQuery} from 'api';
-import {PrimaryButton} from 'components';
+import {Input, LinkButton, PrimaryButton} from 'components';
 import React from 'react';
 import {Text, TextInput, View} from 'react-native';
 import {Account} from '@multiversx/sdk-core';
 import {getMnemonicSelector} from 'redux/slices/mnemonicSlice';
 import {useSelector} from 'react-redux';
 import {exploreMnemonic} from 'utils';
-
-// erd13qr4xsl2pux0kcnxzav4zutp0sm7nc90k0r84l7dqs5pa0u3ms4qtx0754
+import {DEFAULT_RECEIVER} from '../../constants';
+import {useSendTransaction} from 'hooks/useSendTransaction';
 
 const SendTransaction = () => {
-  const [trigger, result] = useLazyGetAccountQuery();
+  const [address, setAddress] = React.useState('');
+  const [amount, setAmount] = React.useState('');
+  //   const [trigger, result] = useLazyGetAccountQuery();
 
-  const mnemonic = useSelector(getMnemonicSelector);
-  const {signer} = exploreMnemonic(mnemonic);
+  const [sendTransaction] = useSendTransaction();
 
-  React.useEffect(() => {
-    trigger({
-      address: 'erd13qr4xsl2pux0kcnxzav4zutp0sm7nc90k0r84l7dqs5pa0u3ms4qtx0754',
-    });
-  }, []);
+  //   const mnemonic = useSelector(getMnemonicSelector);
+  //   const {signer} = exploreMnemonic(mnemonic);
+
+  //   React.useEffect(() => {
+  //     trigger({
+  //       address: 'erd13qr4xsl2pux0kcnxzav4zutp0sm7nc90k0r84l7dqs5pa0u3ms4qtx0754',
+  //     });
+  //   }, []);
 
   const onPressSendTransaction = async () => {
-    const data = 'radu test';
-    const gasLimit = new GasEstimator().forEGLDTransfer(data.length);
-    try {
-      const transaction = new Transaction({
-        chainID: 'D',
-        gasLimit: gasLimit,
-        gasPrice: 1000000000,
-        // nonce: result.data?.nonce,
-        nonce: 4,
-        value: TokenTransfer.egldFromBigInteger('111456789000000000'),
-        data: new TransactionPayload(data),
-        sender: new Address(
-          'erd1uhhzsvwnfd9tlpjawgpvm5tcc05sz2eu2yrq3q9lckrw6zyuftjqeckyhx',
-        ),
-        receiver: new Address(
-          'erd13qr4xsl2pux0kcnxzav4zutp0sm7nc90k0r84l7dqs5pa0u3ms4qtx0754',
-        ),
-      });
+    sendTransaction({receiverAddress: address, amount: amount});
+  };
 
-      const serializedTransaction = transaction.serializeForSigning();
-      const signature = await signer.sign(serializedTransaction);
+  const onAddressChange = (text: string) => {
+    setAddress(text);
+  };
 
-      transaction.applySignature(signature);
+  const onAmountChange = (text: string) => {
+    setAmount(text);
+  };
 
-      const dataToSend = transaction.toSendable();
-
-      const response = await fetch(
-        'https://devnet-api.multiversx.com/transactions',
-        {
-          method: 'POST',
-          body: JSON.stringify(dataToSend),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-
-      console.log(response);
-
-      // await broadcastTransaction(transaction);
-    } catch (error) {
-      console.log('Error on transaction: ', error);
-    }
+  const onTapToPrefillDefaultAddress = () => {
+    setAddress(DEFAULT_RECEIVER);
   };
 
   return (
-    <View style={{flex: 1, alignItems: 'center'}}>
+    <View style={{flex: 1, alignItems: 'center', paddingHorizontal: 24}}>
       <Text style={{fontSize: 24}}>Send</Text>
 
-      <Text>To</Text>
-      <TextInput
-        style={{
-          width: '100%',
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1,
-        }}></TextInput>
+      <Input label="To" value={address} onChangeText={onAddressChange} />
 
-      <Text>Amount</Text>
-      <TextInput
-        inputMode="numeric"
-        style={{
-          width: '100%',
-          height: 40,
-          borderColor: 'gray',
-          borderWidth: 1,
-        }}></TextInput>
+      <LinkButton
+        label="Tap to prefill a default address"
+        onPress={onTapToPrefillDefaultAddress}
+      />
 
+      <View style={{height: 16}} />
+
+      <Input label="Amount" value={amount} onChangeText={onAmountChange} />
+      <View style={{height: 16}} />
       <PrimaryButton
+        disabled={!address || !amount}
         label="Send transaction"
         onPress={onPressSendTransaction}
       />

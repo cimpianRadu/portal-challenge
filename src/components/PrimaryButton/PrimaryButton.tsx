@@ -6,13 +6,14 @@ import styles from './styles';
 const PrimaryButton = ({
   label,
   style,
+  disabled,
   ...props
 }: PressableProps & {
   label: string;
   style?: StyleProp<ViewProps>;
 }) => {
   return (
-    <Button {...props}>
+    <Button {...props} style={[style, disabled && {opacity: 0.4}]}>
       <View style={[style, styles.buttonContainer]}>
         <Text>{label}</Text>
       </View>

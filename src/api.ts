@@ -1,7 +1,6 @@
 import {AccountOnNetwork} from '@multiversx/sdk-network-providers';
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {API_URL} from './constants';
-import {Transaction} from '@multiversx/sdk-core/out';
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
@@ -27,12 +26,19 @@ export const api = createApi({
     getNonceByAddress: builder.query<number, {address: string}>({
       query({address}) {
         return {
-          url: `accounts/${address}/nonce`,
+          url: `accounts/${address}`,
         };
       },
       transformResponse(response: AccountOnNetwork): number {
         return response.nonce;
       },
+    }),
+    sendTransaction: builder.mutation({
+      query: ({transaction}) => ({
+        url: 'transactions',
+        method: 'POST',
+        body: transaction,
+      }),
     }),
   }),
 });
@@ -41,4 +47,6 @@ export const {
   useGetAccountQuery,
   useLazyGetAccountQuery,
   useGetTransactionsQuery,
+  useSendTransactionMutation,
+  useLazyGetNonceByAddressQuery,
 } = api;
