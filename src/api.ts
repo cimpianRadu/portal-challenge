@@ -29,6 +29,7 @@ export const api = createApi({
           url: `accounts/${address}`,
         };
       },
+      keepUnusedDataFor: 0,
       transformResponse(response: AccountOnNetwork): number {
         return response.nonce;
       },

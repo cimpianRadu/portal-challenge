@@ -14,7 +14,7 @@ export const useSendTransaction = () => {
   const mnemonic = useSelector(getMnemonicSelector);
   const {signer, address} = exploreMnemonic(mnemonic);
   const [send] = useSendTransactionMutation();
-  const [trigger, result] = useLazyGetNonceByAddressQuery();
+  const [getNonce, nonce] = useLazyGetNonceByAddressQuery();
 
   const sendTransaction = async ({
     receiverAddress,
@@ -26,12 +26,15 @@ export const useSendTransaction = () => {
     data?: string;
   }) => {
     const gasLimit = new GasEstimator().forEGLDTransfer(data?.length || 0);
-    trigger({address: receiverAddress});
+    await getNonce({address: address.toString()});
+
+    console.log('my nonce ', nonce);
+
     const transaction = new Transaction({
       chainID: 'D',
       gasLimit: gasLimit,
       gasPrice: 1000000000,
-      nonce: result.data || 0,
+      nonce: nonce.data || 0,
       value: TokenTransfer.egldFromBigInteger(amount),
       data: new TransactionPayload(data),
       sender: address,

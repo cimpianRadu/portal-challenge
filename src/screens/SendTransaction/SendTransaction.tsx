@@ -1,39 +1,23 @@
-import {
-  Address,
-  GasEstimator,
-  TokenTransfer,
-  Transaction,
-  TransactionPayload,
-} from '@multiversx/sdk-core/out';
-import {useLazyGetAccountQuery} from 'api';
-import {Input, LinkButton, PrimaryButton} from 'components';
 import React from 'react';
-import {Text, TextInput, View} from 'react-native';
-import {Account} from '@multiversx/sdk-core';
-import {getMnemonicSelector} from 'redux/slices/mnemonicSlice';
-import {useSelector} from 'react-redux';
-import {exploreMnemonic} from 'utils';
+import {Input, LinkButton, PrimaryButton} from 'components';
+import {Text, View} from 'react-native';
 import {DEFAULT_RECEIVER} from '../../constants';
 import {useSendTransaction} from 'hooks/useSendTransaction';
+import {SendTransactionNavigationProp} from 'navigation/types';
 
-const SendTransaction = () => {
+const SendTransaction = ({
+  navigation,
+}: {
+  navigation: SendTransactionNavigationProp;
+}) => {
   const [address, setAddress] = React.useState('');
   const [amount, setAmount] = React.useState('');
-  //   const [trigger, result] = useLazyGetAccountQuery();
 
   const [sendTransaction] = useSendTransaction();
 
-  //   const mnemonic = useSelector(getMnemonicSelector);
-  //   const {signer} = exploreMnemonic(mnemonic);
-
-  //   React.useEffect(() => {
-  //     trigger({
-  //       address: 'erd13qr4xsl2pux0kcnxzav4zutp0sm7nc90k0r84l7dqs5pa0u3ms4qtx0754',
-  //     });
-  //   }, []);
-
   const onPressSendTransaction = async () => {
     sendTransaction({receiverAddress: address, amount: amount});
+    // navigation.navigate('Confirmation');
   };
 
   const onAddressChange = (text: string) => {

@@ -4,6 +4,7 @@ export type RootStackParamList = {
   ImportWallet: undefined;
   Wallet: undefined;
   SendTransaction: undefined;
+  Confirmation: undefined;
 };
 
 export type ImportWalletNavigationProp = StackNavigationProp<
@@ -19,4 +20,9 @@ export type WalletNavigationProp = StackNavigationProp<
 export type SendTransactionNavigationProp = StackNavigationProp<
   RootStackParamList,
   'SendTransaction'
+>;
+
+export type ConfirmationnNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Confirmation'
 >;
