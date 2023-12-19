@@ -1,6 +1,8 @@
+import {TokenTransfer} from '@multiversx/sdk-core/out';
 import * as walletSDK from '@multiversx/sdk-wallet';
 import {Mnemonic, UserSigner} from '@multiversx/sdk-wallet';
 import {UserAddress} from '@multiversx/sdk-wallet/out/userAddress';
+import BigNumber from 'bignumber.js';
 
 export const exploreMnemonic = (
   mnemonicString: string,
@@ -10,7 +12,6 @@ export const exploreMnemonic = (
   const userPublicKey = userSecretKey.generatePublicKey();
   const address = userPublicKey.toAddress();
   const signer = new UserSigner(userSecretKey);
-
   return {
     signer,
     address,
@@ -25,4 +26,8 @@ export const formatTransactionDate = (timestamp: number) => {
   const hour = date.getHours().toString().padStart(2, '0');
   const minutes = date.getMinutes().toString().padStart(2, '0');
   return `${day}/${month}/${year} - ${hour}:${minutes}`;
+};
+
+export const formatTransactionAmount = (amount: BigNumber.Value) => {
+  return TokenTransfer.egldFromBigInteger(amount).toPrettyString();
 };

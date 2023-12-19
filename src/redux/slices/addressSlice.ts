@@ -2,12 +2,12 @@ import {PayloadAction, createSelector, createSlice} from '@reduxjs/toolkit';
 import {RootState} from 'redux/store';
 
 type AddressState = {
-  address: string | null;
+  address: string;
   status: 'IDLE' | 'LOADING' | 'FAILED' | 'SUCCESS';
 };
 
 const initialState: AddressState = {
-  address: null,
+  address: '',
   status: 'IDLE',
 };
 

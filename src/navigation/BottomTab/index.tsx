@@ -6,7 +6,7 @@ const Tab = createBottomTabNavigator();
 
 const BottomTab = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{headerShown: false}}>
       <Tab.Screen name="WalletStack" component={WalletStackNavigator} />
     </Tab.Navigator>
   );

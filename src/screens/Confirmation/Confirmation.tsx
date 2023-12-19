@@ -1,12 +1,22 @@
-import {useGetTransactionStatusQuery, useSendTransactionMutation} from 'api';
-import {LoadingIndicator} from 'components';
-import {ConfirmationScreenRouteProp} from 'navigation/types';
 import React from 'react';
+import {useGetTransactionStatusQuery, useSendTransactionMutation} from 'api';
+import {LinkButton, LoadingIndicator, PrimaryButton} from 'components';
+import {
+  ConfirmationScreenRouteProp,
+  ConfirmationnNavigationProp,
+} from 'navigation/types';
 import {Text, View} from 'react-native';
+import {formatTransactionAmount} from 'utils';
 
-const Confirmation = ({route}: {route: ConfirmationScreenRouteProp}) => {
+const Confirmation = ({
+  route,
+  navigation,
+}: {
+  route: ConfirmationScreenRouteProp;
+  navigation: ConfirmationnNavigationProp;
+}) => {
   const {transactionHash} = route.params;
-  const stopPolling = React.useRef(false);
+  const [shouldSkipPolling, setShouldSkipPolling] = React.useState(false);
 
   const {isLoading, data} = useGetTransactionStatusQuery(
     {
@@ -14,18 +24,23 @@ const Confirmation = ({route}: {route: ConfirmationScreenRouteProp}) => {
     },
     {
       pollingInterval: 5000,
-      skip: stopPolling.current,
+      skip: shouldSkipPolling,
     },
   );
 
   React.useEffect(() => {
-    if (!isLoading) {
-      stopPolling.current = true;
+    if (data && data.status !== 'pending') {
+      console.log('stop polling', data);
+      setShouldSkipPolling(true);
     }
     return () => {
-      stopPolling.current = true;
+      setShouldSkipPolling(true);
     };
-  }, []);
+  }, [data]);
+
+  const onPressBackToWallet = () => {
+    navigation.popToTop();
+  };
 
   if (isLoading) {
     return <LoadingIndicator />;
@@ -51,7 +66,11 @@ const Confirmation = ({route}: {route: ConfirmationScreenRouteProp}) => {
         {data.receiver}
       </Text>
       <View style={{height: 12}} />
-      <Text>{data.value}</Text>
+      {formatTransactionAmount(data.value)}
+      <View style={{height: 12}} />
+      <LinkButton label="View in explorer" onPress={() => {}} />
+      <View style={{height: 12}} />
+      <PrimaryButton label="Back to wallet" onPress={onPressBackToWallet} />
     </View>
   );
 };
