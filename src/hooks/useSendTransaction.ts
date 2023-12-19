@@ -6,6 +6,7 @@ import {
   TransactionPayload,
 } from '@multiversx/sdk-core/out';
 import {useLazyGetNonceByAddressQuery, useSendTransactionMutation} from 'api';
+import React from 'react';
 import {useSelector} from 'react-redux';
 import {getMnemonicSelector} from 'redux/slices/mnemonicSlice';
 import {exploreMnemonic} from 'utils';
@@ -13,28 +14,26 @@ import {exploreMnemonic} from 'utils';
 export const useSendTransaction = () => {
   const mnemonic = useSelector(getMnemonicSelector);
   const {signer, address} = exploreMnemonic(mnemonic);
-  const [send] = useSendTransactionMutation();
-  const [getNonce, nonce] = useLazyGetNonceByAddressQuery();
+  const [send, transResult] = useSendTransactionMutation();
 
   const sendTransaction = async ({
     receiverAddress,
     amount,
     data,
+    nonce,
   }: {
     receiverAddress: string;
     amount: string;
     data?: string;
+    nonce: number;
   }) => {
     const gasLimit = new GasEstimator().forEGLDTransfer(data?.length || 0);
-    await getNonce({address: address.toString()});
-
-    console.log('my nonce ', nonce);
 
     const transaction = new Transaction({
       chainID: 'D',
       gasLimit: gasLimit,
       gasPrice: 1000000000,
-      nonce: nonce.data || 0,
+      nonce: nonce,
       value: TokenTransfer.egldFromBigInteger(amount),
       data: new TransactionPayload(data),
       sender: address,
@@ -50,5 +49,5 @@ export const useSendTransaction = () => {
     send({transaction: dataToSend});
   };
 
-  return [sendTransaction];
+  return [sendTransaction, transResult];
 };

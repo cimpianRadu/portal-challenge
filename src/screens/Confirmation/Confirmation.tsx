@@ -1,16 +1,31 @@
-import {useSendTransactionMutation} from 'api';
+import {useGetTransactionStatusQuery, useSendTransactionMutation} from 'api';
+import {LoadingIndicator} from 'components';
 import React from 'react';
 import {Text, View} from 'react-native';
 
-const Confirmation = () => {
-  const [_, {isLoading, isError, isSuccess}] = useSendTransactionMutation();
+const Confirmation = ({route}) => {
+  const {transactionHash} = route.params;
 
-  console.log('isError', isError);
-  console.log('isSuccess', isSuccess);
-  console.log('isLoading', isLoading);
+  const {isLoading, data} = useGetTransactionStatusQuery(
+    {
+      hash: transactionHash,
+    },
+    {
+      pollingInterval: 5000,
+    },
+  );
+
+  if (isLoading) {
+    return <LoadingIndicator />;
+  }
+
   return (
     <View style={{flex: 1, alignItems: 'center', paddingHorizontal: 24}}>
       <Text style={{fontSize: 24}}>Confirmation</Text>
+      {data.status === 'pending' && <Text style={{fontSize: 50}}>⏳</Text>}
+      {data.status === 'success' && <Text style={{fontSize: 50}}>✅</Text>}
+      {data.status === 'error' && <Text>❌</Text>}
+      <Text>Transaction status {data.status}</Text>
     </View>
   );
 };

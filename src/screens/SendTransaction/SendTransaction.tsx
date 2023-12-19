@@ -4,6 +4,8 @@ import {Text, View} from 'react-native';
 import {DEFAULT_RECEIVER} from '../../constants';
 import {useSendTransaction} from 'hooks/useSendTransaction';
 import {SendTransactionNavigationProp} from 'navigation/types';
+import {useGetNounceForCurrentUser} from 'hooks/useGetNounceForCurrentUser';
+import {useSendTransactionMutation} from 'api';
 
 const SendTransaction = ({
   navigation,
@@ -13,11 +15,25 @@ const SendTransaction = ({
   const [address, setAddress] = React.useState('');
   const [amount, setAmount] = React.useState('');
 
-  const [sendTransaction] = useSendTransaction();
+  const [sendTransaction, result] = useSendTransaction();
+  const [nonceResult] = useGetNounceForCurrentUser();
+
+  console.log('trans result  ', result);
+
+  React.useEffect(() => {
+    if (result.isSuccess) {
+      navigation.navigate('Confirmation', {
+        transactionHash: result.data.txHash,
+      });
+    }
+  }, [result]);
 
   const onPressSendTransaction = async () => {
-    sendTransaction({receiverAddress: address, amount: amount});
-    // navigation.navigate('Confirmation');
+    sendTransaction({
+      receiverAddress: address,
+      amount: amount,
+      nonce: nonceResult.data,
+    });
   };
 
   const onAddressChange = (text: string) => {

@@ -41,6 +41,9 @@ export const api = createApi({
         body: transaction,
       }),
     }),
+    getTransactionStatus: builder.query({
+      query: ({hash}) => `transactions/${hash}`,
+    }),
   }),
 });
 
@@ -50,4 +53,5 @@ export const {
   useGetTransactionsQuery,
   useSendTransactionMutation,
   useLazyGetNonceByAddressQuery,
+  useGetTransactionStatusQuery,
 } = api;
