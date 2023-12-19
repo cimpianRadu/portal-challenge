@@ -3,7 +3,7 @@ import Button from 'components/Button';
 import {PressableProps, StyleProp, Text, View, ViewProps} from 'react-native';
 import styles from './styles';
 
-const PrimaryButton = ({
+const LinkButton = ({
   label,
   style,
   ...props
@@ -20,4 +20,4 @@ const PrimaryButton = ({
   );
 };
 
-export default PrimaryButton;
+export default LinkButton;

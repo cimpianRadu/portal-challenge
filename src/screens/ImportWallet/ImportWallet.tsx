@@ -1,18 +1,22 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {Button, PrimaryButton} from 'components';
+import {Button, LinkButton, PrimaryButton} from 'components';
 import {texts} from '../../constants';
 import styles from './styles';
 import {useAppDispatch} from 'redux/hooks';
 import {useSelector} from 'react-redux';
 import {getMnemonicSelector, setMnemonic} from 'redux/slices/mnemonicSlice';
-import {getInitWalletStatus, initWallet} from 'redux/slices/walletSlice';
 import {getAddressSelector, setAddress} from 'redux/slices/addressSlice';
 import {useLazyGetAccountQuery} from 'api';
-import {getWalletAddress} from 'utils';
+import {exploreMnemonic} from 'utils';
+import {ImportWalletNavigationProp} from 'navigation/types';
 
-const ImportWallet = ({navigation}) => {
+const ImportWallet = ({
+  navigation,
+}: {
+  navigation: ImportWalletNavigationProp;
+}) => {
   const dispatch = useAppDispatch();
   const mnemonic = useSelector(getMnemonicSelector);
   const address = useSelector(getAddressSelector);
@@ -27,13 +31,14 @@ const ImportWallet = ({navigation}) => {
 
   React.useEffect(() => {
     if (!mnemonic) return;
-    const address = getWalletAddress(mnemonic);
-    dispatch(setAddress(address));
+    const {address} = exploreMnemonic(mnemonic);
+    exploreMnemonic(mnemonic);
+    dispatch(setAddress(address.bech32()));
   }, [mnemonic]);
 
   React.useEffect(() => {
     if (!address) return;
-    trigger({address: address.bech32});
+    trigger({address: address});
   }, [address]);
 
   const onPasteMnemonic = async () => {
@@ -49,9 +54,10 @@ const ImportWallet = ({navigation}) => {
     <View style={styles.container}>
       <View style={styles.mnemonicContainer}>
         {!mnemonic ? (
-          <Button onPress={onPasteMnemonic}>
-            <Text>{texts.importWallet.pasteMnemonic}</Text>
-          </Button>
+          <LinkButton
+            label={texts.importWallet.pasteMnemonic}
+            onPress={onPasteMnemonic}
+          />
         ) : (
           <Text>{mnemonic}</Text>
         )}

@@ -1,6 +1,6 @@
 export type Colors = typeof COLORS;
 
 export const COLORS = {
-  PRIMARY: 'blue',
+  PRIMARY: 'cyan',
   RED_ERRROR: 'red',
 };

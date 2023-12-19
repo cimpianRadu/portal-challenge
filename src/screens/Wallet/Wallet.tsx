@@ -1,45 +1,43 @@
+import {TokenTransfer} from '@multiversx/sdk-core/out/tokenTransfer';
 import {useGetAccountQuery, useGetTransactionsQuery} from 'api';
-import {PrimaryButton} from 'components';
+import {LoadingIndicator, PrimaryButton} from 'components';
+import {WalletNavigationProp} from 'navigation/types';
 import React from 'react';
-import {ActivityIndicator, ScrollView, Text, View} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {getAddressSelector} from 'redux/slices/addressSlice';
+import {formatTransactionDate} from 'utils';
+import styles from './styles';
 
-const Wallet = ({navigation}) => {
+const Wallet = ({navigation}: {navigation: WalletNavigationProp}) => {
   const address = useSelector(getAddressSelector);
+
   const {isUninitialized, isLoading, isError, isSuccess, data} =
-    useGetAccountQuery({address: address.bech32});
+    useGetAccountQuery({address: address});
 
   const {isLoading: areTransactionsLoading, data: transactions} =
-    useGetTransactionsQuery({address: address.bech32});
+    useGetTransactionsQuery({address: address});
 
   const onPressSendTransaction = () => {
     navigation.navigate('SendTransaction');
   };
 
   if (isLoading || isUninitialized) {
-    return (
-      <View
-        style={{
-          backgroundColor: 'red',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return <LoadingIndicator />;
   }
 
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+    <View style={styles.container}>
       <Text style={{fontSize: 24}}>Welcome</Text>
 
       {data !== undefined && (
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <Text style={{fontSize: 16, color: 'grey'}}>Address:</Text>
-          <Text style={{textAlign: 'center'}}> {data?.address}</Text>
+          <Text style={{textAlign: 'center'}}> {data?.address.toString()}</Text>
           <Text style={{fontSize: 16, color: 'grey'}}>Balance:</Text>
-          <Text style={{textAlign: 'center'}}>{data?.balance}</Text>
+          <Text style={{textAlign: 'center'}}>
+            {TokenTransfer.egldFromBigInteger(data?.balance).toPrettyString()}
+          </Text>
         </View>
       )}
       <PrimaryButton
@@ -70,6 +68,10 @@ const Wallet = ({navigation}) => {
             <Text>
               <Text style={{fontSize: 16, color: 'grey'}}>To:</Text>
               {transaction.receiver}
+            </Text>
+            <Text>
+              <Text style={{fontSize: 16, color: 'grey'}}>When:</Text>
+              {formatTransactionDate(transaction.timestamp)}
             </Text>
           </View>
         ))}
