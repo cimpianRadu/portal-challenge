@@ -3,10 +3,20 @@ import {StackNavigationProp} from '@react-navigation/stack';
 export type RootStackParamList = {
   ImportWallet: undefined;
   Wallet: undefined;
+  SendTransaction: undefined;
 };
 
-export type HomeScreenNavigationProp = StackNavigationProp<
+export type ImportWalletNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'ImportWallet',
+  'ImportWallet'
+>;
+
+export type WalletNavigationProp = StackNavigationProp<
+  RootStackParamList,
   'Wallet'
+>;
+
+export type SendTransactionNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'SendTransaction'
 >;

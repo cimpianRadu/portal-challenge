@@ -1,7 +1,7 @@
+import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {RootStackParamList} from 'navigation/types';
-import React from 'react';
-import {Wallet, ImportWallet} from 'screens';
+import {Wallet, ImportWallet, SendTransaction} from 'screens';
 
 const stackScreenOptions = {
   headerShown: false,
@@ -14,6 +14,7 @@ const WalletStackNavigator = () => {
     <WalletStack.Navigator screenOptions={stackScreenOptions}>
       <WalletStack.Screen name="ImportWallet" component={ImportWallet} />
       <WalletStack.Screen name="Wallet" component={Wallet} />
+      <WalletStack.Screen name="SendTransaction" component={SendTransaction} />
     </WalletStack.Navigator>
   );
 };

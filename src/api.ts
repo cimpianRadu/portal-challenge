@@ -1,14 +1,9 @@
 import {
   AccountOnNetwork,
   ApiNetworkProvider,
-  ProxyNetworkProvider,
 } from '@multiversx/sdk-network-providers';
 import {Account} from '@multiversx/sdk-core';
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-
-const proxyNetworkProvider = new ProxyNetworkProvider(
-  'https://devnet-gateway.multiversx.com',
-);
 
 export const apiNetworkProvider = new ApiNetworkProvider(
   'https://devnet-api.multiversx.com',
