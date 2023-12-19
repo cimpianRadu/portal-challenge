@@ -7,6 +7,7 @@ import {
 } from 'navigation/types';
 import {Text, View} from 'react-native';
 import {formatTransactionAmount} from 'utils';
+import {TRANSACTIONS_EXPLORER_URL} from '../../constants';
 
 const Confirmation = ({
   route,
@@ -28,6 +29,8 @@ const Confirmation = ({
     },
   );
 
+  console.log(formatTransactionAmount(data?.value));
+
   React.useEffect(() => {
     if (data && data.status !== 'pending') {
       console.log('stop polling', data);
@@ -44,7 +47,7 @@ const Confirmation = ({
 
   const onPressViewInExplorer = () => {
     navigation.navigate('Webview', {
-      uri: `https://devnet-explorer.multiversx.com/transactions/${transactionHash}`,
+      uri: `${TRANSACTIONS_EXPLORER_URL}${transactionHash}`,
     });
   };
 
@@ -60,7 +63,6 @@ const Confirmation = ({
         justifyContent: 'center',
         paddingHorizontal: 24,
       }}>
-      <Text style={{fontSize: 24}}>Confirmation</Text>
       {data.status === 'pending' && <Text style={{fontSize: 50}}>⏳</Text>}
       {data.status === 'success' && <Text style={{fontSize: 50}}>✅</Text>}
       {data.status === 'error' && <Text>❌</Text>}
@@ -78,7 +80,7 @@ const Confirmation = ({
         {data.receiver}
       </Text>
       <Spacer height={20} />
-      {/* {formatTransactionAmount(data.value)} */}
+      <Text> {formatTransactionAmount(data.value)}</Text>
       <Spacer height={20} />
       <LinkButton label="View in explorer" onPress={onPressViewInExplorer} />
       <Spacer height={20} />

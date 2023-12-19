@@ -25,7 +25,4 @@ export const {setAddress} = slice.actions;
 
 export default slice.reducer;
 
-export const getAddressSelector = createSelector(
-  (state: RootState) => state.address.address,
-  address => address,
-);
+export const getAddressSelector = (state: RootState) => state.address.address;

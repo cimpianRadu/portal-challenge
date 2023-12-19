@@ -23,7 +23,5 @@ export const {setMnemonic, setPassword} = slice.actions;
 
 export default slice.reducer;
 
-export const getMnemonicSelector = createSelector(
-  (state: RootState) => state.mnemonic.mnemonic,
-  mnemonic => mnemonic,
-);
+export const getMnemonicSelector = (state: RootState) =>
+  state.mnemonic.mnemonic;
