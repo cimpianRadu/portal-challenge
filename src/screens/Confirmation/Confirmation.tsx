@@ -1,9 +1,10 @@
 import {useGetTransactionStatusQuery, useSendTransactionMutation} from 'api';
 import {LoadingIndicator} from 'components';
+import {ConfirmationScreenRouteProp} from 'navigation/types';
 import React from 'react';
 import {Text, View} from 'react-native';
 
-const Confirmation = ({route}) => {
+const Confirmation = ({route}: {route: ConfirmationScreenRouteProp}) => {
   const {transactionHash} = route.params;
 
   const {isLoading, data} = useGetTransactionStatusQuery(
