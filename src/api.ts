@@ -1,5 +1,4 @@
 import {AccountOnNetwork} from '@multiversx/sdk-network-providers';
-
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {API_URL} from './constants';
 import {Transaction} from '@multiversx/sdk-core/out';
@@ -15,7 +14,7 @@ export const api = createApi({
     getAccount: builder.query<AccountOnNetwork, {address: string}>({
       query: ({address}) => `accounts/${address}`,
     }),
-    getTransactions: builder.query<Transaction[], {address: string}>({
+    getTransactions: builder.query<unknown[], {address: string}>({
       query({address}) {
         return {
           url: `accounts/${address}/transactions`,

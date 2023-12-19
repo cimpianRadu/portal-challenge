@@ -8,6 +8,7 @@ import {useSelector} from 'react-redux';
 import {getAddressSelector} from 'redux/slices/addressSlice';
 import {formatTransactionDate} from 'utils';
 import styles from './styles';
+import Transaction from './Transaction';
 
 const Wallet = ({navigation}: {navigation: WalletNavigationProp}) => {
   const address = useSelector(getAddressSelector);
@@ -28,10 +29,10 @@ const Wallet = ({navigation}: {navigation: WalletNavigationProp}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={{fontSize: 24}}>Welcome</Text>
+      <Text style={styles.title}>Welcome</Text>
 
       {data !== undefined && (
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <View>
           <Text style={{fontSize: 16, color: 'grey'}}>Address:</Text>
           <Text style={{textAlign: 'center'}}> {data?.address.toString()}</Text>
           <Text style={{fontSize: 16, color: 'grey'}}>Balance:</Text>
@@ -45,35 +46,18 @@ const Wallet = ({navigation}: {navigation: WalletNavigationProp}) => {
         onPress={onPressSendTransaction}
       />
 
-      <Text style={{fontSize: 16, color: 'grey', marginVertical: 12}}>
+      <Text style={{fontSize: 18, color: 'grey', marginVertical: 12}}>
         Last 10 transactions for account:
       </Text>
       <ScrollView contentContainerStyle={{paddingHorizontal: 16}}>
         {transactions?.map(transaction => (
-          <View
-            key={transaction?.txHash}
-            style={{
-              borderBottomColor: 'grey',
-              borderBottomWidth: 1,
-              marginVertical: 8,
-            }}>
-            <Text>
-              <Text style={{fontSize: 16, color: 'grey'}}>Hash:</Text>
-              {transaction?.txHash}
-            </Text>
-            <Text>
-              <Text style={{fontSize: 16, color: 'grey'}}>From:</Text>
-              {transaction.sender}
-            </Text>
-            <Text>
-              <Text style={{fontSize: 16, color: 'grey'}}>To:</Text>
-              {transaction.receiver}
-            </Text>
-            <Text>
-              <Text style={{fontSize: 16, color: 'grey'}}>When:</Text>
-              {formatTransactionDate(transaction.timestamp)}
-            </Text>
-          </View>
+          <Transaction
+            key={transaction.txHash}
+            hash={transaction.txHash}
+            sender={transaction.sender}
+            receiver={transaction.receiver}
+            timestamp={transaction.timestamp}
+          />
         ))}
       </ScrollView>
     </View>
