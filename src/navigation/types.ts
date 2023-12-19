@@ -8,6 +8,9 @@ export type RootStackParamList = {
   Confirmation: {
     transactionHash: string;
   };
+  Webview: {
+    uri: string;
+  };
 };
 
 export type ImportWalletNavigationProp = StackNavigationProp<
@@ -34,3 +37,5 @@ export type ConfirmationScreenRouteProp = RouteProp<
   RootStackParamList,
   'Confirmation'
 >;
+
+export type WebviewScreenRouteProp = RouteProp<RootStackParamList, 'Webview'>;

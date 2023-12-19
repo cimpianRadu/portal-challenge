@@ -1,6 +1,6 @@
 import React from 'react';
-import {useGetTransactionStatusQuery, useSendTransactionMutation} from 'api';
-import {LinkButton, LoadingIndicator, PrimaryButton} from 'components';
+import {useGetTransactionStatusQuery} from 'api';
+import {LinkButton, LoadingIndicator, PrimaryButton, Spacer} from 'components';
 import {
   ConfirmationScreenRouteProp,
   ConfirmationnNavigationProp,
@@ -42,12 +42,24 @@ const Confirmation = ({
     navigation.popToTop();
   };
 
+  const onPressViewInExplorer = () => {
+    navigation.navigate('Webview', {
+      uri: `https://devnet-explorer.multiversx.com/transactions/${transactionHash}`,
+    });
+  };
+
   if (isLoading) {
     return <LoadingIndicator />;
   }
 
   return (
-    <View style={{flex: 1, alignItems: 'center', paddingHorizontal: 24}}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 24,
+      }}>
       <Text style={{fontSize: 24}}>Confirmation</Text>
       {data.status === 'pending' && <Text style={{fontSize: 50}}>⏳</Text>}
       {data.status === 'success' && <Text style={{fontSize: 50}}>✅</Text>}
@@ -58,18 +70,18 @@ const Confirmation = ({
         <Text style={{fontSize: 16, color: 'gray'}}>TX hash: </Text>
         {data.txHash}
       </Text>
-      <View style={{height: 20}} />
+      <Spacer height={20} />
       <Text>
         <Text style={{fontSize: 16, color: 'gray'}}>
           Successfully sent to:{' '}
         </Text>
         {data.receiver}
       </Text>
-      <View style={{height: 12}} />
-      {formatTransactionAmount(data.value)}
-      <View style={{height: 12}} />
-      <LinkButton label="View in explorer" onPress={() => {}} />
-      <View style={{height: 12}} />
+      <Spacer height={20} />
+      {/* {formatTransactionAmount(data.value)} */}
+      <Spacer height={20} />
+      <LinkButton label="View in explorer" onPress={onPressViewInExplorer} />
+      <Spacer height={20} />
       <PrimaryButton label="Back to wallet" onPress={onPressBackToWallet} />
     </View>
   );

@@ -4,8 +4,13 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import {RootStackParamList} from 'navigation/types';
-import {Wallet, ImportWallet, SendTransaction, Confirmation} from 'screens';
-import {StackHeaderOptions} from '@react-navigation/stack/lib/typescript/src/types';
+import {
+  Wallet,
+  ImportWallet,
+  SendTransaction,
+  Confirmation,
+  Webview,
+} from 'screens';
 
 const stackScreenOptions = {
   headerMode: 'screen',
@@ -31,6 +36,7 @@ const WalletStackNavigator = () => {
         options={{title: 'Send'}}
       />
       <WalletStack.Screen name="Confirmation" component={Confirmation} />
+      <WalletStack.Screen name="Webview" component={Webview} />
     </WalletStack.Navigator>
   );
 };

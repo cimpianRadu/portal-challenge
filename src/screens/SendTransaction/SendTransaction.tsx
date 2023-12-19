@@ -1,6 +1,6 @@
 import React from 'react';
 import {Input, LinkButton, PrimaryButton, Spacer} from 'components';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import {DEFAULT_RECEIVER} from '../../constants';
 import {useSendTransaction} from 'hooks/useSendTransaction';
 import {SendTransactionNavigationProp} from 'navigation/types';
@@ -46,7 +46,13 @@ const SendTransaction = ({
   };
 
   return (
-    <View style={{flex: 1, alignItems: 'center', paddingHorizontal: 24}}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 24,
+      }}>
       <Input label="To" value={address} onChangeText={onAddressChange} />
 
       <LinkButton

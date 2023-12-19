@@ -33,6 +33,7 @@
     "react-native-randombytes": "^3.6.1",
     "react-native-safe-area-context": "^4.8.1",
     "react-native-screens": "^3.29.0",
+    "react-native-webview": "^13.6.3",
     "react-redux": "^9.0.4",
     "readable-stream": "^1.0.33",
     "stream-browserify": "^1.0.0",
