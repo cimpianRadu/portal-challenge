@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from 'components/Button';
-import {PressableProps, StyleProp, Text, ViewProps} from 'react-native';
+import {PressableProps, StyleProp, Text, View, ViewProps} from 'react-native';
 
 const PrimaryButton = ({
   label,
@@ -17,12 +17,14 @@ const PrimaryButton = ({
         style,
         {
           padding: 8,
-          alignSelf: 'flex-start',
+
           borderRadius: 4,
           backgroundColor: 'cyan',
         },
       ]}>
-      <Text>{label}</Text>
+      <View style={{alignSelf: 'flex-start'}}>
+        <Text>{label}</Text>
+      </View>
     </Button>
   );
 };

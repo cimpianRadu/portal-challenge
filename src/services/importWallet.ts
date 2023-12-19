@@ -1,4 +1,3 @@
-import {Account} from '@multiversx/sdk-core/out/account';
 import {AccountOnNetwork} from '@multiversx/sdk-network-providers/out/accounts';
 import * as walletSDK from '@multiversx/sdk-wallet';
 import {apiNetworkProvider} from 'api';
@@ -20,15 +19,6 @@ export const importWalletFromMnemonic = async ({
     'oParola#1',
   );
   const walletAddress = decryptedWallet.generatePublicKey().toAddress();
-
-  // const alice = new Account(walletAddress);
-
-  // console.log(
-  //   'what account , ',
-  //   alice.balance.toString(),
-  //   alice.address.bech32(),
-  //   alice.toJSON(),
-  // );
 
   const account = await apiNetworkProvider.getAccount(walletAddress);
 

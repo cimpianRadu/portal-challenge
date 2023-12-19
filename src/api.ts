@@ -1,8 +1,10 @@
 import {
+  AccountOnNetwork,
   ApiNetworkProvider,
   ProxyNetworkProvider,
 } from '@multiversx/sdk-network-providers';
 import {Account} from '@multiversx/sdk-core';
+import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 
 const proxyNetworkProvider = new ProxyNetworkProvider(
   'https://devnet-gateway.multiversx.com',
@@ -12,24 +14,30 @@ export const apiNetworkProvider = new ApiNetworkProvider(
   'https://devnet-api.multiversx.com',
 );
 
-export const testNetwork = async () => {
-  const networkConfig = await apiNetworkProvider.getNetworkConfig();
-  console.log(networkConfig.MinGasPrice);
-  console.log(networkConfig.ChainID);
-};
+export const api = createApi({
+  baseQuery: fetchBaseQuery({baseUrl: 'https://devnet-api.multiversx.com'}),
+  endpoints: builder => ({
+    getAccount: builder.query<AccountOnNetwork, {address: string}>({
+      query: ({address}) => `accounts/${address}`,
+    }),
+    getTransactions: builder.query({
+      query({address}) {
+        return {
+          url: `accounts/${address}/transactions`,
+          params: {
+            size: 10,
+          },
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        };
+      },
+    }),
+  }),
+});
 
-export const inspectAccount = async addressOfAlice => {
-  console.log('what address is passed', addressOfAlice);
-  try {
-    const alice = new Account(addressOfAlice);
-    console.log('Alice:', alice);
-    const aliceOnNetwork = await apiNetworkProvider.getAccount(addressOfAlice);
-    console.log('Alice on network:', aliceOnNetwork);
-    alice.update(aliceOnNetwork);
-
-    console.log('Nonce:', alice.nonce);
-    console.log('Balance:', alice.balance.toString());
-  } catch (error) {
-    console.log('error', error);
-  }
-};
+export const {
+  useGetAccountQuery,
+  useLazyGetAccountQuery,
+  useGetTransactionsQuery,
+} = api;

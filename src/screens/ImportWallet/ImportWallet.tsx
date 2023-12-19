@@ -8,11 +8,16 @@ import {useAppDispatch} from 'redux/hooks';
 import {useSelector} from 'react-redux';
 import {getMnemonicSelector, setMnemonic} from 'redux/slices/mnemonicSlice';
 import {getInitWalletStatus, initWallet} from 'redux/slices/walletSlice';
+import {getAddressSelector, setAddress} from 'redux/slices/addressSlice';
+import {useLazyGetAccountQuery} from 'api';
+import {getWalletAddress} from 'utils';
 
 const ImportWallet = ({navigation}) => {
   const dispatch = useAppDispatch();
   const mnemonic = useSelector(getMnemonicSelector);
-  const importWalletStatus = useSelector(getInitWalletStatus);
+  const address = useSelector(getAddressSelector);
+
+  const [trigger] = useLazyGetAccountQuery();
 
   React.useEffect(() => {
     Clipboard.setString(
@@ -21,10 +26,15 @@ const ImportWallet = ({navigation}) => {
   }, []);
 
   React.useEffect(() => {
-    if (importWalletStatus === 'SUCCESS') {
-      navigation.navigate('Wallet');
-    }
-  }, [importWalletStatus]);
+    if (!mnemonic) return;
+    const address = getWalletAddress(mnemonic);
+    dispatch(setAddress(address));
+  }, [mnemonic]);
+
+  React.useEffect(() => {
+    if (!address) return;
+    trigger({address: address.bech32});
+  }, [address]);
 
   const onPasteMnemonic = async () => {
     const mnemonic = await Clipboard.getString();
@@ -32,8 +42,7 @@ const ImportWallet = ({navigation}) => {
   };
 
   const onImport = async () => {
-    if (!mnemonic) return;
-    dispatch(initWallet({mnemonic}));
+    navigation.navigate('Wallet');
   };
 
   return (
