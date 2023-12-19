@@ -1,6 +1,6 @@
 import React from 'react';
 import {Input, LinkButton, PrimaryButton, Spacer} from 'components';
-import {View} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import {DEFAULT_RECEIVER} from '../../constants';
 import {useSendTransaction} from 'hooks/useSendTransaction';
 import {SendTransactionNavigationProp} from 'navigation/types';
@@ -14,16 +14,16 @@ const SendTransaction = ({
   const [address, setAddress] = React.useState('');
   const [amount, setAmount] = React.useState('');
 
-  const [sendTransaction, result] = useSendTransaction();
+  const [sendTransaction, {isSuccess, isLoading, data}] = useSendTransaction();
   const [nonceResult] = useGetNounceForCurrentUser();
 
   React.useEffect(() => {
-    if (result.isSuccess) {
+    if (isSuccess) {
       navigation.navigate('Confirmation', {
-        transactionHash: result.data.txHash,
+        transactionHash: data.txHash,
       });
     }
-  }, [result]);
+  }, [isSuccess, data]);
 
   const onPressSendTransaction = async () => {
     sendTransaction({
@@ -66,11 +66,15 @@ const SendTransaction = ({
 
       <Spacer height={16} />
 
-      <PrimaryButton
-        disabled={!address || !amount}
-        label="Send transaction"
-        onPress={onPressSendTransaction}
-      />
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <PrimaryButton
+          disabled={!address || !amount}
+          label="Send transaction"
+          onPress={onPressSendTransaction}
+        />
+      )}
     </View>
   );
 };

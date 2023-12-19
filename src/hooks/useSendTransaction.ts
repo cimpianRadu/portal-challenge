@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Address,
   GasEstimator,
@@ -5,8 +6,7 @@ import {
   Transaction,
   TransactionPayload,
 } from '@multiversx/sdk-core/out';
-import {useLazyGetNonceByAddressQuery, useSendTransactionMutation} from 'api';
-import React from 'react';
+import {useSendTransactionMutation} from 'api';
 import {useSelector} from 'react-redux';
 import {getMnemonicSelector} from 'redux/slices/mnemonicSlice';
 import {exploreMnemonic} from 'utils';
