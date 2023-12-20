@@ -25,21 +25,20 @@ const Confirmation = ({
     },
     {
       pollingInterval: 5000,
-      skip: shouldSkipPolling,
+      // skip: shouldSkipPolling,
     },
   );
 
-  console.log(formatTransactionAmount(data?.value));
+  console.log('wtf ', shouldSkipPolling);
 
   React.useEffect(() => {
-    if (data && data.status !== 'pending') {
-      console.log('stop polling', data);
+    if (data && (data.status === 'success' || data.status !== 'error')) {
       setShouldSkipPolling(true);
     }
     return () => {
       setShouldSkipPolling(true);
     };
-  }, [data]);
+  }, [data, data?.status]);
 
   const onPressBackToWallet = () => {
     navigation.popToTop();
@@ -63,26 +62,33 @@ const Confirmation = ({
         justifyContent: 'center',
         paddingHorizontal: 24,
       }}>
-      {data.status === 'pending' && <Text style={{fontSize: 50}}>⏳</Text>}
-      {data.status === 'success' && <Text style={{fontSize: 50}}>✅</Text>}
-      {data.status === 'error' && <Text>❌</Text>}
       <Text>Transaction status {data.status}</Text>
+      {data.status === 'pending' && <Text style={{fontSize: 50}}>⏳</Text>}
+      {data.status === 'error' && <Text>❌</Text>}
+      {data.status === 'success' && (
+        <>
+          <Text style={{fontSize: 50}}>✅</Text>
+          <Text>
+            <Text style={{fontSize: 16, color: 'gray'}}>TX hash: </Text>
+            {data.txHash}
+          </Text>
+          <Spacer height={20} />
+          <Text>
+            <Text style={{fontSize: 16, color: 'gray'}}>
+              Successfully sent to:{' '}
+            </Text>
+            {data.receiver}
+          </Text>
+          <Spacer height={20} />
+          <Text> {formatTransactionAmount(data.value)}</Text>
+          <Spacer height={20} />
+          <LinkButton
+            label="View in explorer"
+            onPress={onPressViewInExplorer}
+          />
+        </>
+      )}
 
-      <Text>
-        <Text style={{fontSize: 16, color: 'gray'}}>TX hash: </Text>
-        {data.txHash}
-      </Text>
-      <Spacer height={20} />
-      <Text>
-        <Text style={{fontSize: 16, color: 'gray'}}>
-          Successfully sent to:{' '}
-        </Text>
-        {data.receiver}
-      </Text>
-      <Spacer height={20} />
-      <Text> {formatTransactionAmount(data.value)}</Text>
-      <Spacer height={20} />
-      <LinkButton label="View in explorer" onPress={onPressViewInExplorer} />
       <Spacer height={20} />
       <PrimaryButton label="Back to wallet" onPress={onPressBackToWallet} />
     </View>

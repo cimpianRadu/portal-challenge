@@ -62,16 +62,16 @@ const ImportWallet = () => {
         )}
       </View>
 
-      {isLoading || isImportAccountSuccessfully ? (
-        <ActivityIndicator />
-      ) : (
-        <View style={styles.importAccountButtonContainer}>
+      <View style={styles.importAccountButtonContainer}>
+        {isLoading || isImportAccountSuccessfully ? (
+          <ActivityIndicator />
+        ) : (
           <PrimaryButton
             label={texts.importWallet.importAccount}
             onPress={onImport}
           />
-        </View>
-      )}
+        )}
+      </View>
     </View>
   );
 };
