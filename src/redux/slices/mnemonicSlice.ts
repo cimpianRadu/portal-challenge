@@ -2,8 +2,8 @@ import {PayloadAction, createSelector, createSlice} from '@reduxjs/toolkit';
 import {RootState} from 'redux/store';
 
 const initialState = {
-  mnemonic: '',
-  password: '',
+  mnemonic:
+    'door roast solar ridge such addict gun miracle crack pattern garlic over nut ugly giggle old shuffle such replace wife turn rubber idea priority',
 };
 
 const slice = createSlice({
@@ -13,13 +13,10 @@ const slice = createSlice({
     setMnemonic(state, action: PayloadAction<string>) {
       state.mnemonic = action.payload;
     },
-    setPassword(state, action: PayloadAction<string>) {
-      state.password = action.payload;
-    },
   },
 });
 
-export const {setMnemonic, setPassword} = slice.actions;
+export const {setMnemonic} = slice.actions;
 
 export default slice.reducer;
 

@@ -1,12 +1,35 @@
 import {WebviewScreenRouteProp} from 'navigation/types';
 import React from 'react';
 import {Text, View} from 'react-native';
-import {WebView as RNWebview} from 'react-native-webview';
+import {WebView as RNWebview, WebViewNavigation} from 'react-native-webview';
+import {useAppDispatch} from 'redux/hooks';
+import {setIsOpen} from 'redux/slices/signTransactionModalSlice';
+import {setTransactionInput} from 'redux/slices/transactionSlice';
 
 const Webview = ({route}: {route: WebviewScreenRouteProp}) => {
   const {uri} = route.params;
+  const dispatch = useAppDispatch();
+  const webviewRef = React.useRef<RNWebview>(null);
 
-  function getQueryParams(url: string): Record<string, string> {
+  React.useEffect(() => {
+    const script = `
+    localStorage.setItem('account', 'value');
+    true; // note: this line is important to avoid warnings on iOS
+  `;
+    if (webviewRef.current) {
+      webviewRef.current.injectJavaScript(script);
+    }
+  }, []);
+
+  const onNavigationStateChange = (event: WebViewNavigation) => {
+    if (event.url.includes('hook/transaction')) {
+      dispatch(setIsOpen(true));
+      const {data, gasLimit, receiver, value} = getQueryParams(event.url);
+      dispatch(setTransactionInput({data, gasLimit, receiver, value}));
+    }
+  };
+
+  const getQueryParams = (url: string): Record<string, string> => {
     // Extract the query string from the URL
     const queryStartIndex = url.indexOf('?');
 
@@ -27,7 +50,7 @@ const Webview = ({route}: {route: WebviewScreenRouteProp}) => {
 
     console.log(queryParams);
     return queryParams;
-  }
+  };
 
   if (!uri) {
     return (
@@ -38,20 +61,13 @@ const Webview = ({route}: {route: WebviewScreenRouteProp}) => {
   }
   return (
     <RNWebview
+      ref={webviewRef}
       source={{uri: uri}}
       style={{marginTop: 20}}
       onMessage={event => {
         console.log('on message ', event);
       }}
-      onNavigationStateChange={event => {
-        console.log('what event ', event);
-        if (event.url !== uri) {
-          getQueryParams(event.url);
-          console.log(event.url);
-          // this.webview.stopLoading();
-          // Linking.openURL(event.url);
-        }
-      }}
+      onNavigationStateChange={onNavigationStateChange}
     />
   );
 };
