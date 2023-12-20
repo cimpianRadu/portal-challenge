@@ -2,8 +2,7 @@ import {PayloadAction, createSelector, createSlice} from '@reduxjs/toolkit';
 import {RootState} from 'redux/store';
 
 const initialState = {
-  mnemonic:
-    'door roast solar ridge such addict gun miracle crack pattern garlic over nut ugly giggle old shuffle such replace wife turn rubber idea priority',
+  mnemonic: '',
 };
 
 const slice = createSlice({

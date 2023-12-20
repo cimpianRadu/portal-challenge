@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {ActivityIndicator, Text, View} from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {Button, LinkButton, PrimaryButton} from 'components';
+import {LinkButton, PrimaryButton} from 'components';
 import {texts} from '../../constants';
 import styles from './styles';
 import {useAppDispatch} from 'redux/hooks';
@@ -10,18 +10,15 @@ import {getMnemonicSelector, setMnemonic} from 'redux/slices/mnemonicSlice';
 import {getAddressSelector, setAddress} from 'redux/slices/addressSlice';
 import {useLazyGetAccountQuery} from 'api';
 import {exploreMnemonic} from 'utils';
-import {ImportWalletNavigationProp} from 'navigation/types';
+import {setAccountImported} from 'redux/slices/importAccountSlice';
 
-const ImportWallet = ({
-  navigation,
-}: {
-  navigation: ImportWalletNavigationProp;
-}) => {
+const ImportWallet = () => {
   const dispatch = useAppDispatch();
   const mnemonic = useSelector(getMnemonicSelector);
   const address = useSelector(getAddressSelector);
 
-  const [trigger] = useLazyGetAccountQuery();
+  const [getAccount, {isSuccess: isImportAccountSuccessfully, isLoading}] =
+    useLazyGetAccountQuery();
 
   React.useEffect(() => {
     Clipboard.setString(
@@ -32,14 +29,14 @@ const ImportWallet = ({
   React.useEffect(() => {
     if (!mnemonic) return;
     const {address} = exploreMnemonic(mnemonic);
-    exploreMnemonic(mnemonic);
     dispatch(setAddress(address.bech32()));
   }, [mnemonic]);
 
   React.useEffect(() => {
-    if (!address) return;
-    trigger({address: address});
-  }, [address]);
+    if (isImportAccountSuccessfully && address) {
+      dispatch(setAccountImported(true));
+    }
+  }, [isImportAccountSuccessfully, address]);
 
   const onPasteMnemonic = async () => {
     const mnemonic = await Clipboard.getString();
@@ -47,7 +44,9 @@ const ImportWallet = ({
   };
 
   const onImport = async () => {
-    navigation.navigate('Wallet');
+    if (address) {
+      getAccount({address: address});
+    }
   };
 
   return (
@@ -63,12 +62,16 @@ const ImportWallet = ({
         )}
       </View>
 
-      <View style={styles.importAccountButtonContainer}>
-        <PrimaryButton
-          label={texts.importWallet.importAccount}
-          onPress={onImport}
-        />
-      </View>
+      {isLoading || isImportAccountSuccessfully ? (
+        <ActivityIndicator />
+      ) : (
+        <View style={styles.importAccountButtonContainer}>
+          <PrimaryButton
+            label={texts.importWallet.importAccount}
+            onPress={onImport}
+          />
+        </View>
+      )}
     </View>
   );
 };

@@ -3,7 +3,7 @@ import {TokenTransfer} from '@multiversx/sdk-core/out/tokenTransfer';
 import {useGetAccountQuery, useGetTransactionsQuery} from 'api';
 import {LoadingIndicator, PrimaryButton} from 'components';
 import {WalletNavigationProp} from 'navigation/types';
-import {ScrollView, Text, View} from 'react-native';
+import {ActivityIndicator, ScrollView, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {getAddressSelector} from 'redux/slices/addressSlice';
 import styles from './styles';
@@ -48,17 +48,21 @@ const Wallet = ({navigation}: {navigation: WalletNavigationProp}) => {
       <Text style={{fontSize: 18, color: 'grey', marginVertical: 12}}>
         Last 10 transactions for account:
       </Text>
-      <ScrollView contentContainerStyle={{paddingHorizontal: 16}}>
-        {transactions?.map(transaction => (
-          <Transaction
-            key={transaction.txHash}
-            hash={transaction.txHash}
-            sender={transaction.sender}
-            receiver={transaction.receiver}
-            timestamp={transaction.timestamp}
-          />
-        ))}
-      </ScrollView>
+      {areTransactionsLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <ScrollView contentContainerStyle={{paddingHorizontal: 16}}>
+          {transactions?.map(transaction => (
+            <Transaction
+              key={transaction.txHash}
+              hash={transaction.txHash}
+              sender={transaction.sender}
+              receiver={transaction.receiver}
+              timestamp={transaction.timestamp}
+            />
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 };

@@ -1,6 +1,7 @@
 import {AccountOnNetwork} from '@multiversx/sdk-network-providers';
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {API_URL} from './constants';
+import {RootState} from 'redux/store';
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
@@ -55,3 +56,6 @@ export const {
   useLazyGetNonceByAddressQuery,
   useGetTransactionStatusQuery,
 } = api;
+
+export const getAccountSelector = (state: RootState) =>
+  state.api.queries['getAccount'];

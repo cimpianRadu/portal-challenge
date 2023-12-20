@@ -24,11 +24,6 @@ const WalletStack = createNativeStackNavigator<RootStackParamList>();
 const WalletStackNavigator = () => {
   return (
     <WalletStack.Navigator screenOptions={stackScreenOptions}>
-      <WalletStack.Screen
-        name="ImportWallet"
-        component={ImportWallet}
-        options={{title: 'Welcome'}}
-      />
       <WalletStack.Screen name="Wallet" component={Wallet} />
       <WalletStack.Screen
         name="SendTransaction"
