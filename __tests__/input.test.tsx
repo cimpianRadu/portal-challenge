@@ -1,5 +1,6 @@
 import React from 'react';
 import {render} from '@testing-library/react-native';
+import renderer from 'react-test-renderer';
 import Input from 'components/Input';
 
 describe('Input Component', () => {
@@ -21,5 +22,10 @@ describe('Input Component', () => {
       <Input label={testLabel} errorMessage={testErrorMessage} />,
     );
     expect(getByText(testErrorMessage)).toBeDefined();
+  });
+
+  it('renders correctly and matches snapshot', () => {
+    const tree = renderer.create(<Input label={testLabel} />).toJSON();
+    expect(tree).toMatchSnapshot();
   });
 });

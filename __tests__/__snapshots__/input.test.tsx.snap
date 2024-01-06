@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Input Component renders correctly and matches snapshot 1`] = `
+[
+  <Text
+    style={
+      [
+        {
+          "alignSelf": "flex-start",
+          "color": "gray",
+          "fontSize": 14,
+        },
+        undefined,
+      ]
+    }
+  >
+    Test Label
+  </Text>,
+  <TextInput
+    style={
+      {
+        "borderColor": "gray",
+        "borderWidth": 1,
+        "height": 40,
+        "width": "100%",
+      }
+    }
+  />,
+]
+`;
