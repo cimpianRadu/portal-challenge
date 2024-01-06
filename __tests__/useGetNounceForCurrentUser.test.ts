@@ -3,7 +3,6 @@ import {useGetNounceForCurrentUser} from '../src/hooks/useGetNounceForCurrentUse
 import * as redux from 'react-redux';
 import * as api from 'api';
 
-// Mock the necessary modules
 jest.mock('react-redux', () => ({
   useSelector: jest.fn(),
 }));

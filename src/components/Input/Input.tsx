@@ -20,7 +20,7 @@ const Input = ({
 }) => {
   return (
     <>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, labelStyle]}>{label}</Text>
       <TextInput style={styles.input} {...props} />
       {errorMessage && <Text style={styles.errorMessage}>{errorMessage}</Text>}
     </>
