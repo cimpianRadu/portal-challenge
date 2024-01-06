@@ -29,8 +29,6 @@ const Confirmation = ({
     },
   );
 
-  console.log('wtf ', shouldSkipPolling);
-
   React.useEffect(() => {
     if (data && (data.status === 'success' || data.status !== 'error')) {
       setShouldSkipPolling(true);
